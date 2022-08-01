@@ -29,22 +29,26 @@ export const Login = () => {
 
         if (GraphQLSucceed) {
             console.log("------ Login ------ loginToken:", loginToken);
+        } else {
+            console.log("------ Login ------ GraphQLError:", GraphQLError);
         }
     };
 
-    const [ loginMutation, { data: loginMutationResult } ] = useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, { onCompleted });
+    const [ loginMutation, { data: loginMutationResult, loading } ] = useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, { onCompleted });
     
     const onSubmit = () => {
-        const { email, password } = getValues();
+        if (!loading) {
+            const { email, password } = getValues();
 
-        loginMutation({
-            variables: {
-                loginInput: {
-                    email,
-                    password
+            loginMutation({
+                variables: {
+                    loginInput: {
+                        email,
+                        password
+                    }
                 }
-            }
-        });
+            });
+        }
     };
 
     return (
@@ -72,7 +76,7 @@ export const Login = () => {
                     />
                     {errors.password?.message && <FormError errorMessage={errors.password.message} />}
                     {errors.password?.type === "minLength" && <FormError errorMessage="Password must be longer than 8 characters" />}
-                    <button className="btn mt-3">Log In</button>
+                    <button className="btn mt-3">{loading ? "Loading..." : "Log In"}</button>
                     {loginMutationResult?.login.GraphQLError && <FormError errorMessage={loginMutationResult.login.GraphQLError} />}
                 </form>
             </div>

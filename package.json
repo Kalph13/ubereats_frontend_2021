@@ -20,17 +20,17 @@
     "react-hook-form": "^7.34.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "rimraf": "^3.0.2",
     "tailwindcss": "^3.1.7",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run tailwind:build & react-scripts start",
+    "start": "npm run generate & tailwind:build & react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "generate": "graphql-codegen",
-    "apollo:codegen": "npx apollo@2.32.0 client:codegen src/__generated__ --target=typescript --outputFlat",
     "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css"
   },
   "eslintConfig": {
