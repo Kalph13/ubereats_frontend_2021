@@ -29,6 +29,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "generate": "graphql-codegen",
+    "apollo:codegen": "npx apollo@2.32.0 client:codegen src/__generated__ --target=typescript --outputFlat",
     "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css"
   },
   "eslintConfig": {
@@ -48,5 +50,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.11.3",
+    "@graphql-codegen/typed-document-node": "^2.3.2",
+    "@graphql-codegen/typescript": "^2.7.2",
+    "@graphql-codegen/typescript-operations": "^2.5.2"
   }
 }

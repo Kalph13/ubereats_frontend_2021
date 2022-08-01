@@ -1,0 +1,7 @@
+mutation Login($loginInput: LoginInput!) {
+    login (input: $loginInput) {
+        GraphQLSucceed,
+        GraphQLError,
+        loginToken
+    }
+}
