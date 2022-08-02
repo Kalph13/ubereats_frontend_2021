@@ -5,8 +5,8 @@ const loginToken = localStorage.getItem(LOCALSTORAGE_LOGIN_TOKEN);
 export const isLoggedInVar = makeVar(Boolean(loginToken));
 export const authTokenVar = makeVar(loginToken);
 
-console.log("------ Apollo Client ------ isLoggedInVar:", isLoggedInVar);
-console.log("------ Apollo Client ------ authTokenVar:", authTokenVar);
+console.log("------ Apollo Client ------ isLoggedInVar:", isLoggedInVar());
+console.log("------ Apollo Client ------ authTokenVar:", authTokenVar());
 
 export const client = new ApolloClient({
     uri: "http://localhost:4000/graphql",

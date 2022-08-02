@@ -33,7 +33,8 @@ export const CreateAccount = () => {
         } = data;
 
         if (GraphQLSucceed) {
-            navigate("/login");
+            alert("Your account is successfully created! Log in and enjoy Uber Eats")
+            navigate("/");
         }
     };
 
@@ -71,7 +72,7 @@ export const CreateAccount = () => {
                     <input 
                         {...register("email", {
                             required: "Email is required",
-                            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                            pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                         })}
                         className="input"
                         type="email"
@@ -107,7 +108,7 @@ export const CreateAccount = () => {
                 </form>
                 <div>
                     Already have an account?{" "}
-                    <Link to="/login" className="text-lime-600 hover:underline">
+                    <Link to="/" className="text-lime-600 hover:underline">
                         Log in now
                     </Link>
                 </div>

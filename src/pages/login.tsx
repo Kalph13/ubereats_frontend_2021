@@ -1,11 +1,12 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { FormError } from "../components/form-error";
 import { Button } from "../components/button";
-import { isLoggedInVar } from "../apollo";
+import { authTokenVar, isLoggedInVar } from "../apollo";
+import { LOCALSTORAGE_LOGIN_TOKEN } from "../constant";
 import Logo from "../images/logo.svg";
 
 /* GraphQL Code Generator (Replaces Codegen): https://www.graphql-code-generator.com/docs/getting-started/installation */
@@ -34,8 +35,10 @@ export const Login = () => {
             }
         } = data;
 
-        if (GraphQLSucceed) {
+        if (GraphQLSucceed && loginToken) {
             console.log("------ Login ------ loginToken:", loginToken);
+            localStorage.setItem(LOCALSTORAGE_LOGIN_TOKEN, loginToken);
+            authTokenVar(loginToken);
             isLoggedInVar(true);
         } else {
             console.log("------ Login ------ GraphQLError:", GraphQLError);
@@ -81,7 +84,7 @@ export const Login = () => {
                         required
                         {...register("email", {
                             required: "Email is required",
-                            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                            pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                          })}
                     />
                     {formState.errors.email?.message && <FormError errorMessage={formState.errors.email.message} />}
