@@ -1,9 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Helmet } from "react-helmet";
 import { useMutation } from "@apollo/client";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { FormError } from "../components/form-error";
 import { Button } from "../components/button";
+import { isLoggedInVar } from "../apollo";
 import Logo from "../images/logo.svg";
 
 /* GraphQL Code Generator (Replaces Codegen): https://www.graphql-code-generator.com/docs/getting-started/installation */
@@ -34,12 +36,16 @@ export const Login = () => {
 
         if (GraphQLSucceed) {
             console.log("------ Login ------ loginToken:", loginToken);
+            isLoggedInVar(true);
         } else {
             console.log("------ Login ------ GraphQLError:", GraphQLError);
         }
     };
 
-    const [ loginMutation, { data: loginMutationResult, loading } ] = useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, { onCompleted });
+    const [
+        loginMutation,
+        { data: loginMutationResult, loading }
+    ] = useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, { onCompleted });
     
     const onSubmit = () => {
         if (!loading) {
@@ -58,8 +64,11 @@ export const Login = () => {
 
     return (
         <div className="h-screen flex flex-col items-center mt-10 lg:mt-28">
+            <Helmet>
+                <title>Login | Uber Eats</title>
+            </Helmet>
             <div className="w-full flex flex-col max-w-screen-sm px-5 items-center">
-                <img src={Logo} className="w-52 mb-10" />
+                <img src={Logo} alt="Logo" className="w-52 mb-10" />
                 <h4 className="w-full font-medium text-left text-3xl mb-5">Welcome Back</h4>
                 <form
                     className="grid gap-3 mt-5 w-full mb-5"
@@ -70,15 +79,22 @@ export const Login = () => {
                         placeholder="Email"
                         type="email"
                         required
-                        {...register("email", { required: "Email is required" })}
+                        {...register("email", {
+                            required: "Email is required",
+                            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                         })}
                     />
                     {formState.errors.email?.message && <FormError errorMessage={formState.errors.email.message} />}
+                    {formState.errors.email?.type === "pattern" && <FormError errorMessage="Please enter a valid email" />}
                     <input
                         className="input"
                         placeholder="Password"
                         type="password"
                         required
-                        {...register("password", { required: "Password is required", minLength: 8 })}
+                        {...register("password", {
+                            required: "Password is required",
+                            minLength: 8
+                        })}
                     />
                     {formState.errors.password?.message && <FormError errorMessage={formState.errors.password.message} />}
                     {formState.errors.password?.type === "minLength" && <FormError errorMessage="Password must be longer than 8 characters" />}

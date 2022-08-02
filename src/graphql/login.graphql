@@ -1,7 +1,14 @@
 mutation Login($loginInput: LoginInput!) {
     login (input: $loginInput) {
-        GraphQLSucceed,
-        GraphQLError,
+        GraphQLSucceed
+        GraphQLError
         loginToken
+    }
+}
+
+mutation CreateAccount($createAccountInput: CreateAccountInput!) {
+    createAccount (input: $createAccountInput) {
+        GraphQLSucceed
+        GraphQLError
     }
 }
