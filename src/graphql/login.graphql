@@ -21,3 +21,10 @@ mutation CreateAccount($createAccountInput: CreateAccountInput!) {
         GraphQLError
     }
 }
+
+mutation VerifyEmail($verifyEmailInput: VerifyEmailInput!) {
+    verifyEmail (input: $verifyEmailInput) {
+        GraphQLSucceed
+        GraphQLError
+    }
+}

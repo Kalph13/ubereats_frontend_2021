@@ -8,16 +8,25 @@ import Logo from "../images/logo.svg";
 export const Header = () => {
     const { data } = useFindMe();
 
+    console.log("------ Header ------ data:", data);
+
     return (
-        <header className="py-4">
-            <div className="w-full px-5 xl:px-0 max-w-screen-xl mx-auto flex justify-center items-center">
-                <img src={Logo} alt="Logo" className="w-24" />
-                <span className="text-xs">
-                    <Link to="/my-profile">
-                        <FontAwesomeIcon icon={faUser} className="text-xl" />
-                    </Link>
-                </span>
-            </div>
-        </header>
+        <>
+            {!data?.findMe.verified &&
+                <div className="bg-red-500 p-3 text-center text-xs text-white">
+                    <span>Please verify your email</span>
+                </div>
+            }
+            <header className="py-4">
+                <div className="w-full px-5 xl:px-0 max-w-screen-xl mx-auto flex justify-center items-center">
+                    <img src={Logo} alt="Logo" className="w-24" />
+                    <span className="text-xs">
+                        <Link to="/my-profile">
+                            <FontAwesomeIcon icon={faUser} className="text-xl" />
+                        </Link>
+                    </span>
+                </div>
+            </header>
+        </>
     );
 };

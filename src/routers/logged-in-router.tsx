@@ -1,12 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useFindMe } from "../hooks/useFindMe";
 import { Header } from "../components/header";
 import { Restaurants } from "../pages/clients/restaurants";
 import { NotFound } from "../pages/404";
-import { useFindMe } from "../hooks/useFindMe";
+import { ConfirmEmail } from "../pages/user/confirm-email";
 
 const ClientRoutes = [
-    <Route path="/" element={<Restaurants />} />
+    <Route key={1} path="/" element={<Restaurants />} />,
+    <Route key={2} path="/confirm-email" element={<ConfirmEmail />} />
 ];
 
 export const LoggedInRouter = () => {
