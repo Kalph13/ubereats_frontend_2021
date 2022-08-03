@@ -13,15 +13,17 @@ export const Header = () => {
     return (
         <>
             {!data?.findMe.verified &&
-                <div className="bg-red-500 p-3 text-center text-xs text-white">
+                <div className="bg-red-500 p-3 text-center text-base text-white">
                     <span>Please verify your email</span>
                 </div>
             }
             <header className="py-4">
                 <div className="w-full px-5 xl:px-0 max-w-screen-xl mx-auto flex justify-center items-center">
-                    <img src={Logo} alt="Logo" className="w-24" />
+                    <Link to="/">
+                        <img src={Logo} alt="Logo" className="w-36" />
+                    </Link>
                     <span className="text-xs">
-                        <Link to="/my-profile">
+                        <Link to="/edit-profile">
                             <FontAwesomeIcon icon={faUser} className="text-xl" />
                         </Link>
                     </span>

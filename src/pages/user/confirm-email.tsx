@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { useMutation, useApolloClient, gql } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 import { useFindMe } from "../../hooks/useFindMe";
 import { VerifyEmailDocument, VerifyEmailMutation, VerifyEmailMutationVariables } from "../../graphql/generated";
 
 export const ConfirmEmail = () => {
     const client = useApolloClient();
+    const navigate = useNavigate();
     const { data: userData } = useFindMe();
 
     const onCompleted = (data: VerifyEmailMutation) => {
@@ -26,12 +28,14 @@ export const ConfirmEmail = () => {
                     verified: true
                 }
             });
+            navigate("/");
         }
     };
 
     const [ verifyEmail ] = useMutation<VerifyEmailMutation, VerifyEmailMutationVariables>(VerifyEmailDocument, { onCompleted });
 
     useEffect(() => {
+        // eslint-disable-next-line
         const [ _, code ] = window.location.href.split("code");
         console.log("------ Confirm Email ------ code:", code);
         verifyEmail({
@@ -41,7 +45,7 @@ export const ConfirmEmail = () => {
                 }
             }
         });
-    }, []);
+    }, [verifyEmail]);
 
     return (
         <div className="mt-52 flex flex-col items-center justify-center">

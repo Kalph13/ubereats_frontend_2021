@@ -28,3 +28,10 @@ mutation VerifyEmail($verifyEmailInput: VerifyEmailInput!) {
         GraphQLError
     }
 }
+
+mutation EditProfile($editProfileInput: EditProfileInput!) {
+    editProfile (input: $editProfileInput) {
+        GraphQLSucceed
+        GraphQLError
+    }
+}
