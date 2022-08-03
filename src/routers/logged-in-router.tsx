@@ -1,10 +1,16 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
-import { isLoggedInVar } from "../apollo";
-import { FindMeDocument, FindMeQuery } from "../graphql/generated";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Header } from "../components/header";
+import { Restaurants } from "../pages/clients/restaurants";
+import { NotFound } from "../pages/404";
+import { useFindMe } from "../hooks/useFindMe";
+
+const ClientRoutes = [
+    <Route path="/" element={<Restaurants />} />
+];
 
 export const LoggedInRouter = () => {
-    const { data, loading, error } = useQuery<FindMeQuery>(FindMeDocument);
+    const { data, loading, error } = useFindMe();
 
     if (!data || loading || error) {
         return (
@@ -14,14 +20,15 @@ export const LoggedInRouter = () => {
         )
     }
 
+    /* Navigate (Replaces Redirect): https://devalice.tistory.com/112 */
     return (
-        <div>
-            <h1>Logged In</h1>
-            <h1>{data.findMe.id}</h1>
-            <h1>{data.findMe.email}</h1>
-            <h1>{data.findMe.role}</h1>
-            <h1>{data.findMe.verified}</h1>
-            <button onClick={() => isLoggedInVar(false)}>Log Out</button>
-        </div>
+        <Router>
+            <Header />
+            <Routes>
+                {data.findMe.role === "Client" && ClientRoutes}
+                <Route path="/" element={<Navigate replace to="/" />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </Router>
     )
 };
