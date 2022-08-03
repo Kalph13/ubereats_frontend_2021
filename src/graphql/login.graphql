@@ -1,3 +1,12 @@
+query FindMe {
+    findMe {
+        id
+        email
+        role
+        verified
+    }
+}
+
 mutation Login($loginInput: LoginInput!) {
     login (input: $loginInput) {
         GraphQLSucceed

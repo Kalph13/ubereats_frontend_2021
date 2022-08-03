@@ -1,15 +1,26 @@
-import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
+import { ApolloClient, InMemoryCache, makeVar, createHttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { LOCALSTORAGE_LOGIN_TOKEN } from "./constant";
 
 const loginToken = localStorage.getItem(LOCALSTORAGE_LOGIN_TOKEN);
 export const isLoggedInVar = makeVar(Boolean(loginToken));
 export const authTokenVar = makeVar(loginToken);
 
-console.log("------ Apollo Client ------ isLoggedInVar:", isLoggedInVar());
-console.log("------ Apollo Client ------ authTokenVar:", authTokenVar());
+const httpLink = createHttpLink({
+    uri: "http://localhost:4000/graphql"
+});
+
+const authLink = setContext((_, { headers }) => {
+    return {
+        headers: {
+            ...headers,
+            "x-jwt": authTokenVar() || ""
+        }
+    };
+});
 
 export const client = new ApolloClient({
-    uri: "http://localhost:4000/graphql",
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache({
         typePolicies: {
             Query: {
