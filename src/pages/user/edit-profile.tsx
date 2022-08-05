@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { useFindMe } from "../../hooks/useFindMe";
@@ -75,8 +76,11 @@ export const EditProfile = () => {
 
     return (
         <div className="mt-52 flex flex-col justify-center items-center">
+            <Helmet>
+                <title>Edit Profile | Uber Eats</title>
+            </Helmet>
             <h4 className="font-semibold text-2xl mb-3">Edit Profile</h4>
-            <form className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5" onSubmit={onSubmit}>
+            <form className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5" onSubmit={handleSubmit(onSubmit)}>
                 <input
                     {...register("email", { pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ })}
                     className="input"

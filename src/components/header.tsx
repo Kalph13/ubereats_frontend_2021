@@ -20,11 +20,11 @@ export const Header = () => {
             <header className="py-4">
                 <div className="w-full px-5 xl:px-0 max-w-screen-xl mx-auto flex justify-center items-center">
                     <Link to="/">
-                        <img src={Logo} alt="Logo" className="w-36" />
+                            <img src={Logo} alt="Logo" className="w-44" />
                     </Link>
                     <span className="text-xs">
                         <Link to="/edit-profile">
-                            <FontAwesomeIcon icon={faUser} className="text-xl" />
+                            <FontAwesomeIcon icon={faUser} className="text-2xl" />
                         </Link>
                     </span>
                 </div>
