@@ -8,11 +8,9 @@ import Logo from "../images/logo.svg";
 export const Header = () => {
     const { data } = useFindMe();
 
-    console.log("------ Header ------ data:", data);
-
     return (
         <>
-            {!data?.findMe.verified &&
+            {data?.findMe.verified === false &&
                 <div className="bg-red-500 p-3 text-center text-base text-white">
                     <span>Please verify your email</span>
                 </div>

@@ -69,6 +69,7 @@
     "@graphql-codegen/cli": "^2.11.3",
     "@graphql-codegen/typed-document-node": "^2.3.2",
     "@graphql-codegen/typescript": "^2.7.2",
-    "@graphql-codegen/typescript-operations": "^2.5.2"
+    "@graphql-codegen/typescript-operations": "^2.5.2",
+    "mock-apollo-client": "^1.2.0"
   }
 }

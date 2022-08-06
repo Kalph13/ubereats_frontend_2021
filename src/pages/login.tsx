@@ -87,8 +87,8 @@ export const Login = () => {
                             pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                          })}
                     />
-                    {formState.errors.email?.message && <FormError errorMessage={formState.errors.email.message} />}
                     {formState.errors.email?.type === "pattern" && <FormError errorMessage="Please enter a valid email" />}
+                    {formState.errors.email?.message && <FormError errorMessage={formState.errors.email.message} />}
                     <input
                         className="input"
                         placeholder="Password"
