@@ -363,6 +363,13 @@ export type MutationVerifyEmailArgs = {
   input: VerifyEmailInput;
 };
 
+export type MyRestaurantsOutput = {
+  __typename?: 'MyRestaurantsOutput';
+  GraphQLError?: Maybe<Scalars['String']>;
+  GraphQLSucceed: Scalars['Boolean'];
+  restaurants: Array<Restaurant>;
+};
+
 export type Order = {
   __typename?: 'Order';
   createdAt: Scalars['DateTime'];
@@ -429,6 +436,7 @@ export type Query = {
   getOrder: GetOrderOutput;
   getOrders: GetOrdersOutput;
   getPayments: GetPaymentsOutput;
+  myRestaurants: MyRestaurantsOutput;
   restaurant: RestaurantOutput;
   searchRestaurant: SearchRestaurantOutput;
   userProfile: UserProfileOutput;

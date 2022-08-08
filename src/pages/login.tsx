@@ -85,10 +85,10 @@ export const Login = () => {
                         {...register("email", {
                             required: "Email is required",
                             pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                         })}
+                        })}
                     />
-                    {formState.errors.email?.type === "pattern" && <FormError errorMessage="Please enter a valid email" />}
-                    {formState.errors.email?.message && <FormError errorMessage={formState.errors.email.message} />}
+                    {formState.errors.email?.message && <FormError testId="email_required" errorMessage={formState.errors.email.message} />}
+                    {formState.errors.email?.type === "pattern" && <FormError testId="email_invalid" errorMessage="Please enter a valid email" />}
                     <input
                         className="input"
                         placeholder="Password"
@@ -99,8 +99,8 @@ export const Login = () => {
                             minLength: 8
                         })}
                     />
-                    {formState.errors.password?.message && <FormError errorMessage={formState.errors.password.message} />}
-                    {formState.errors.password?.type === "minLength" && <FormError errorMessage="Password must be longer than 8 characters" />}
+                    {formState.errors.password?.message && <FormError testId="password_required" errorMessage={formState.errors.password.message} />}
+                    {formState.errors.password?.type === "minLength" && <FormError testId="password_invalid" errorMessage="Password must be longer than 8 characters" />}
                     <Button canClick={formState.isValid} loading={loading} actionText={"Log In"} />
                     {loginMutationResult?.login.GraphQLError && <FormError errorMessage={loginMutationResult.login.GraphQLError} />}
                 </form>

@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ApolloProvider } from "@apollo/client";
 import { createMockClient, MockApolloClient } from "mock-apollo-client";
-import { render, waitFor, RenderResult } from "@testing-library/react";
+import { screen, render, waitFor, waitForElementToBeRemoved, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Login } from "../../pages/login";
 import { LoginDocument } from "../../graphql/generated";
@@ -34,30 +34,27 @@ describe("<Login />", () => {
     });
 
     it("displays email validation errors", async () => {
-        const { getByPlaceholderText, getByRole } = renderResult;
+        const { getByPlaceholderText, getByRole, getByTestId } = renderResult;
         const email = getByPlaceholderText(/email/i);
-        await waitFor(() => {
-            userEvent.type(email, "wrongEmail");
-        });
-        let errorMessage = getByRole("alert");
-        expect(errorMessage).toHaveTextContent(/please enter a valid email/i);
-        await waitFor(() => {
-            userEvent.clear(email);
-        });
-        errorMessage = getByRole("alert");
-        expect(errorMessage).toHaveTextContent(/email is required/i);
+        await userEvent.type(email, "test"); /* Don't Need to Use waitFor() Here */
+        const formatError = await waitFor(() => getByTestId("email_invalid")); /* Must Use waitFor() Here */
+        expect(formatError).toHaveTextContent(/please enter a valid email/i); 
+        await userEvent.clear(email); /* Don't Need to Use waitFor() Here */
+        const emptyError = await waitFor(() => getByTestId("email_required")); /* Must Use waitFor() Here */
+        expect(emptyError).toHaveTextContent(/email is required/i);
     });
 
     it("displays password required error", async () => {
-        const { getByPlaceholderText, getByRole } = renderResult;
+        const { getByPlaceholderText, getByRole, getByTestId } = renderResult;
         const email = getByPlaceholderText(/email/i);
-        const button = getByRole("button");
-        await waitFor(() => {
-            userEvent.type(email, "test@email.com");
-            userEvent.click(button);
-        });
-        const errorMessage = getByRole("alert");
-        expect(errorMessage).toHaveTextContent(/password is required/i);
+        const password = getByPlaceholderText(/password/i);
+        await userEvent.type(email, "test@email.com");
+        await userEvent.type(password, "test");
+        const formatError = await waitFor(() => getByTestId("password_invalid"));
+        expect(formatError).toHaveTextContent(/password must be longer than 8 characters/i);
+        await userEvent.clear(password);
+        const emptyError = await waitFor(() => getByTestId("password_required"));
+        expect(emptyError).toHaveTextContent(/password is required/i);
     });
 
     it("submits form and calls mutation", async () => {
@@ -80,20 +77,18 @@ describe("<Login />", () => {
         });
         mockedClient.setRequestHandler(LoginDocument, mockedMutationResponse);
         jest.spyOn(Storage.prototype, "setItem");
-        await waitFor(() => {
-            userEvent.type(email, formData.email);
-            userEvent.type(password, formData.password);
-            userEvent.click(button);
-        });
+        await userEvent.type(email, formData.email);
+        await userEvent.type(password, formData.password);
+        await userEvent.click(button);
         expect(mockedMutationResponse).toHaveBeenCalledTimes(1);
         expect(mockedMutationResponse).toHaveBeenCalledWith({
             loginInput: {
                 email: formData.email,
                 password: formData.password
-            }
-        });
-        const errorMessage = getByRole("alert");
+            }})
+        ;
+        const errorMessage = await waitFor(() => getByRole("alert"));
         expect(errorMessage).toHaveTextContent(/testLoginError/i);
         expect(localStorage.setItem).toHaveBeenCalledWith("LOCALSTORAGE_LOGIN_TOKEN", "testLoginToken");
-    })
+    });
 });
