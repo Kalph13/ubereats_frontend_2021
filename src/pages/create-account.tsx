@@ -79,8 +79,8 @@ export const CreateAccount = () => {
                         placeholder="Email"
                         required
                     />
-                    {formState.errors.email?.message && <FormError errorMessage={formState.errors.email.message} />}
-                    {formState.errors.email?.type === "pattern" && <FormError errorMessage="Please enter a valid email" />}
+                    {formState.errors.email?.message && <FormError testId="email_required" errorMessage={formState.errors.email.message} />}
+                    {formState.errors.email?.type === "pattern" && <FormError testId="email_invalid" errorMessage="Please enter a valid email" />}
                     <input 
                         {...register("password", {
                             required: "Password is required",
@@ -91,8 +91,8 @@ export const CreateAccount = () => {
                         placeholder="Password"
                         required
                     />
-                    {formState.errors.password?.message && <FormError errorMessage={formState.errors.password.message} />}
-                    {formState.errors.password?.type === "minLength" && <FormError errorMessage={"Password must be longer than 8 characters"} />}
+                    {formState.errors.password?.message && <FormError testId="password_required" errorMessage={formState.errors.password.message} />}
+                    {formState.errors.password?.type === "minLength" && <FormError testId="password_invalid" errorMessage={"Password must be longer than 8 characters"} />}
                     <select
                         {...register("role", { required: true })}
                         className="input"

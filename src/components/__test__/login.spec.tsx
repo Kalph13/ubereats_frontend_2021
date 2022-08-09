@@ -33,7 +33,7 @@ describe("<Login />", () => {
         });
     });
 
-    it("displays email validation errors", async () => {
+    it("displays email errors", async () => {
         const { getByPlaceholderText, getByRole, getByTestId } = renderResult;
         const email = getByPlaceholderText(/email/i);
         await userEvent.type(email, "test"); /* Don't Need to Use waitFor() Here */
@@ -44,7 +44,7 @@ describe("<Login />", () => {
         expect(emptyError).toHaveTextContent(/email is required/i);
     });
 
-    it("displays password required error", async () => {
+    it("displays password errors", async () => {
         const { getByPlaceholderText, getByRole, getByTestId } = renderResult;
         const email = getByPlaceholderText(/email/i);
         const password = getByPlaceholderText(/password/i);
@@ -85,8 +85,7 @@ describe("<Login />", () => {
             loginInput: {
                 email: formData.email,
                 password: formData.password
-            }})
-        ;
+        }});
         const errorMessage = await waitFor(() => getByRole("alert"));
         expect(errorMessage).toHaveTextContent(/testLoginError/i);
         expect(localStorage.setItem).toHaveBeenCalledWith("LOCALSTORAGE_LOGIN_TOKEN", "testLoginToken");
