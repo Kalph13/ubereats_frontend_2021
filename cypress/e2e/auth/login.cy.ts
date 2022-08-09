@@ -16,15 +16,13 @@ describe("Log In", () => {
     cy.get("span[role=alert]").should("have.text", "Password is required");
   });
   
-  it("can fill out the form", () => {
-    cy.visit("/");
+  it("can fill out the form and log in", () => {
+    cy.login("test@email.com", "test1234");
+    /* Replaced by Custom Commands */
+    /* cy.visit("/");
     cy.get("input[name=email]").type("test@email.com");
     cy.get("input[name=password]").type("test1234");
     cy.get("button[role=button]").should("not.have.class", "pointer-events-none").click();
-    cy.window().its("localStorage.LOCALSTORAGE_LOGIN_TOKEN").should("be.a", "string");
+    cy.window().its("localStorage.LOCALSTORAGE_LOGIN_TOKEN").should("be.a", "string"); */
   });
-
-  it("signs up", () => {
-    cy.visit("/create-account");
-  })
 });

@@ -37,3 +37,32 @@
 // }
 
 import '@testing-library/cypress' /* This Doesn't Work for Unknown Reason */
+
+Cypress.Commands.add("assertLoggedIn", () => {
+    cy.window().its("localStorage.LOCALSTORAGE_LOGIN_TOKEN").should("be.a", "string");
+});
+
+Cypress.Commands.add("assertLoggedOut", () => {
+    cy.window().its("localStorage.LOCALSTORAGE_LOGIN_TOKEN").should("be.undefined");
+});
+
+Cypress.Commands.add("login", (email, password) => {
+    cy.visit("/");
+    cy.assertLoggedOut();
+    cy.title().should("eq", "Login | Uber Eats");
+    cy.get("input[name=email]").type(email);
+    cy.get("input[name=password]").type(password);
+    cy.get("button[role=button]").should("not.have.class", "pointer-events-none").click();
+    cy.assertLoggedIn();
+})
+
+/* TypeScript for Cypress Custom Commands: https://github.com/cypress-io/cypress-example-todomvc#cypress-intellisense */
+declare global {
+    namespace Cypress {
+        interface Chainable {
+            assertLoggedIn(): Chainable<void>
+            assertLoggedOut(): Chainable<void>
+            login(email: string, password: string): Chainable<void>
+        }
+    }
+}
