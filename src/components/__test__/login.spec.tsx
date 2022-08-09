@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ApolloProvider } from "@apollo/client";
 import { createMockClient, MockApolloClient } from "mock-apollo-client";
-import { screen, render, waitFor, waitForElementToBeRemoved, RenderResult } from "@testing-library/react";
+import { render, waitFor, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Login } from "../../pages/login";
 import { LoginDocument } from "../../graphql/generated";
