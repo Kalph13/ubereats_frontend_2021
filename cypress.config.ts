@@ -4,6 +4,7 @@ import { defineConfig } from "cypress";
 /* - 'cypress.config.ts' is Newly Created */
 /* - 'support/index.js' is Deprecated → Replaced by 'support/e2e.ts' */
 /* - 'integration/' is Deprecated → Replaced by 'e2e/' */
+/* - 'npx cypress open' for Execution */
 
 /* TypeScript for Cypress: https://docs.cypress.io/guides/tooling/typescript-support */
 /* - Manually Create 'cypress/tsconfig.json' */
