@@ -1,0 +1,9 @@
+{
+    "data": {
+        "createAccount": {
+            "GraphQLSucceed": true,
+            "GraphQLError": null,
+            "__typename": "CreateAccountOutput"
+        }
+    }
+}

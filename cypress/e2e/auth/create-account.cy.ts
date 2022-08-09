@@ -24,15 +24,9 @@ describe("Create Account", () => {
             if (operationName && operationName === "CreateAccount") {
                 req.reply(res => {
                     res.send({
-                        data: {
-                            createAccount: {
-                                GraphQLSucceed: true,
-                                GraphQLError: null,
-                                __typename: "CreateAccountOutput"
-                            }
-                        }
-                    })
-                })
+                        fixture: "auth/create-account.json"
+                    });
+                });
             }
         });
         cy.visit("/create-account");
