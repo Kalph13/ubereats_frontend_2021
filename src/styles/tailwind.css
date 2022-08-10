@@ -1,8 +1,16 @@
 @tailwind base;
 @tailwind components;
 
+.container {
+    @apply max-w-screen-2xl mx-auto;
+}
+
 .input {
     @apply focus:outline-none focus:border-gray-500 p-3 border-2 text-lg border-gray-200 transition-colors;
+}
+
+.link {
+    @apply text-lime-600 hover:underline;
 }
 
 @tailwind utilities;

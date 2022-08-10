@@ -10,6 +10,7 @@ import { NotFound } from "../pages/404";
 import { ConfirmEmail } from "../pages/user/confirm-email";
 import { EditProfile } from "../pages/user/edit-profile";
 import { MyRestaurants } from "../pages/owner/my-restaurants";
+import { AddRestaurant } from "../pages/owner/add-restaurants";
 
 const clientRoutes = [
     { path: "/", element: <Restaurants /> },
@@ -21,7 +22,8 @@ const clientRoutes = [
 ];
 
 const ownerRoutes = [
-    { path: "/", element: <MyRestaurants /> }
+    { path: "/", element: <MyRestaurants /> },
+    { path: "/add-restaurant", element: <AddRestaurant /> }
 ];
 
 export const LoggedInRouter = () => {

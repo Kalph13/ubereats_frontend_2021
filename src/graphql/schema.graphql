@@ -85,6 +85,16 @@ query SearchRestaurant($searchRestaurantInput: SearchRestaurantInput!) {
     }
 }
 
+query MyRestaurants {
+    myRestaurants {
+        GraphQLSucceed
+        GraphQLError
+        restaurants {
+            ...RestaurantParts
+        }
+    }
+}
+
 mutation Login($loginInput: LoginInput!) {
     login (input: $loginInput) {
         GraphQLSucceed
@@ -109,6 +119,13 @@ mutation VerifyEmail($verifyEmailInput: VerifyEmailInput!) {
 
 mutation EditProfile($editProfileInput: EditProfileInput!) {
     editProfile (input: $editProfileInput) {
+        GraphQLSucceed
+        GraphQLError
+    }
+}
+
+mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {
+    createRestaurant(input: $createRestaurantInput) {
         GraphQLSucceed
         GraphQLError
     }
