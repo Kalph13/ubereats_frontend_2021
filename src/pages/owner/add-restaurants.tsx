@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useMutation } from "@apollo/client";
+import { ApolloClient, useApolloClient, useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/button";
 import { FormError } from "../../components/form-error";
-import { CreateRestaurantDocument, CreateRestaurantMutation, CreateRestaurantMutationVariables } from "../../graphql/generated";
+import { CreateRestaurantDocument, CreateRestaurantMutation, CreateRestaurantMutationVariables, MyRestaurantsDocument } from "../../graphql/generated";
 
 interface IFromProps {
     name: string;
@@ -14,18 +15,53 @@ interface IFromProps {
 }
 
 export const AddRestaurant = () => {
+    const client = useApolloClient();
+    const navigate = useNavigate();
+    
     const [ uploading, setUploading ] = useState(false);
-
+    const [ imageUrl, setImageUrl ] = useState("");
+    
     const onCompleted = (data: CreateRestaurantMutation) => {
         const { 
             createRestaurant: {
                 GraphQLSucceed,
-                GraphQLError
+                restaurantId
             }
         } = data;
 
-        if (GraphQLSucceed) {
+        if (GraphQLSucceed && restaurantId) {
             setUploading(false);
+
+            const { name, categoryName, address } = getValues();
+            const queryResult = client.readQuery({ query: MyRestaurantsDocument });
+            
+            /* Cache Update: https://www.apollographql.com/docs/react/caching/cache-interaction */
+            queryResult && client.writeQuery({
+                query: MyRestaurantsDocument,
+                data: {
+                    myRestaurants: {
+                        ...queryResult?.myRestaurants,
+                        restaurants: [
+                            {
+                                __typename: "Restaurant",
+                                id: restaurantId,
+                                name,
+                                address,
+                                coverImg: imageUrl,
+                                isPromoted: false,
+                                category: {
+                                    __typename: "Category",
+                                    name: categoryName
+                                },
+                                
+                            },
+                            ...queryResult?.myRestaurants.restaurants
+                        ]
+                    }
+                }
+            });
+
+            navigate("/");
         }
     };
 
@@ -40,16 +76,22 @@ export const AddRestaurant = () => {
     const onSubmit = async () => {
         try {
             setUploading(true);
+            
             const { file, name, categoryName, address } = getValues();
             const actualFile = file[0];
+            
             const formBody = new FormData();
             formBody.append("file", actualFile);
+            
             const { url: coverImg } = await (
                 await fetch("http://localhost:4000/uploads/", {
                     method: "POST",
                     body: formBody
                 })
             ).json();
+
+            setImageUrl(coverImg);
+
             createRestaurant({
                 variables: {
                     createRestaurantInput: {
@@ -61,7 +103,7 @@ export const AddRestaurant = () => {
                 }
             });
         } catch (e) {
-
+            console.log("------ Add Restaurant ------ onSubmit error:", e);
         }
     };
 
