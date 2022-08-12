@@ -154,7 +154,7 @@ mutation EditProfile($editProfileInput: EditProfileInput!) {
 }
 
 mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {
-    createRestaurant(input: $createRestaurantInput) {
+    createRestaurant (input: $createRestaurantInput) {
         GraphQLSucceed
         GraphQLError
         restaurantId
@@ -162,7 +162,14 @@ mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {
 }
 
 mutation CreateDish($createDishInput: CreateDishInput!) {
-    createDish(input: $createDishInput) {
+    createDish (input: $createDishInput) {
+        GraphQLSucceed
+        GraphQLError
+    }
+}
+
+mutation CreatePayment($createPaymentInput: CreatePaymentInput!) {
+    createPayment (input: $createPaymentInput) {
         GraphQLSucceed
         GraphQLError
     }
