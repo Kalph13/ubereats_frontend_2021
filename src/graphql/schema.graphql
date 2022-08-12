@@ -17,6 +17,22 @@ fragment CategoryParts on Category {
     countRestaurants
 }
 
+fragment DishParts on Dish {
+    id
+    name
+    price
+    photo
+    description
+    options {
+        name
+        extra
+        choices {
+            name
+            extra
+        }
+    }
+}
+
 query FindMe {
     findMe {
         id
@@ -95,6 +111,19 @@ query MyRestaurants {
     }
 }
 
+query MyRestaurant($myRestaurantInput: MyRestaurantInput!) {
+    myRestaurant (input: $myRestaurantInput) {
+        GraphQLSucceed
+        GraphQLError
+        restaurant {
+            ...RestaurantParts
+            menu {
+                ...DishParts
+            }
+        }
+    }
+}
+
 mutation Login($loginInput: LoginInput!) {
     login (input: $loginInput) {
         GraphQLSucceed
@@ -129,5 +158,12 @@ mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {
         GraphQLSucceed
         GraphQLError
         restaurantId
+    }
+}
+
+mutation CreateDish($createDishInput: CreateDishInput!) {
+    createDish(input: $createDishInput) {
+        GraphQLSucceed
+        GraphQLError
     }
 }

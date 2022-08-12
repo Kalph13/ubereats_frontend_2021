@@ -11,6 +11,8 @@ import { ConfirmEmail } from "../pages/user/confirm-email";
 import { EditProfile } from "../pages/user/edit-profile";
 import { MyRestaurants } from "../pages/owner/my-restaurants";
 import { AddRestaurant } from "../pages/owner/add-restaurants";
+import { MyRestaurant } from "../pages/owner/my-restaurant";
+import { AddDish } from "../pages/owner/add-dish";
 
 const clientRoutes = [
     { path: "/", element: <Restaurants /> },
@@ -23,7 +25,9 @@ const clientRoutes = [
 
 const ownerRoutes = [
     { path: "/", element: <MyRestaurants /> },
-    { path: "/add-restaurant", element: <AddRestaurant /> }
+    { path: "/add-restaurant", element: <AddRestaurant /> },
+    { path: "/restaurant/:id", element: <MyRestaurant /> },
+    { path: "/restaurant/:restaurantId/add-dish", element: <AddDish />}
 ];
 
 export const LoggedInRouter = () => {
