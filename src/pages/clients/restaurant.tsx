@@ -4,13 +4,13 @@ import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { RestaurantDocument, RestaurantQuery, RestaurantQueryVariables } from "../../graphql/generated";
 
-interface IRestaurantParams {
+/* interface IRestaurantParams {
     id: string;
-}
+} */
 
 export const Restaurant = () => {
     const params = useParams();
-    const { data, loading } = useQuery<RestaurantQuery, RestaurantQueryVariables>(RestaurantDocument, {
+    const { data } = useQuery<RestaurantQuery, RestaurantQueryVariables>(RestaurantDocument, {
         variables: {
             restaurantInput: {
                 restaurandId: params.id ? +params.id : 0

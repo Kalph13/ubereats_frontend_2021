@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../../components/button";
 import { CreateDishDocument, CreateDishMutation, CreateDishMutationVariables, MyRestaurantDocument } from "../../graphql/generated";
 
-interface IParams {
+/* interface IParams {
     restaurantId: string;
 }
 
@@ -15,7 +15,7 @@ interface IFormParams {
     price: string;
     description: string;
     [key: string]: string;
-}
+} */
 
 export const AddDish = () => { 
     const params = useParams();
