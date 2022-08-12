@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
@@ -14,11 +14,13 @@ interface IFormParams {
     name: string;
     price: string;
     description: string;
+    [key: string]: string;
 }
 
 export const AddDish = () => { 
     const params = useParams();
-    const navigage = useNavigate();
+    const navigate = useNavigate();
+    const [ optionIndex, setOptionIndex ] = useState<number[]>([]);
 
     const [ createDish, { loading } ] = useMutation<CreateDishMutation, CreateDishMutationVariables>(CreateDishDocument, {
         refetchQueries: [
@@ -33,12 +35,17 @@ export const AddDish = () => {
         ]
     });
 
-    const { register, getValues, handleSubmit, formState} = useForm<IFormParams>({
+    const { register, setValue, getValues, handleSubmit, formState} = useForm({
         mode: "onChange"
     });
 
     const onSubmit = () => {
-        const { name, price, description } = getValues();
+        const { name, price, description, ...rest } = getValues();
+
+        const optionObject = optionIndex.map(index => ({
+            name: rest[`${index}-optionName`],
+            extra: +rest[`${index}-optionExtra`]
+        }));
 
         createDish({
             variables: {
@@ -46,12 +53,25 @@ export const AddDish = () => {
                     name,
                     price: +price,
                     description,
-                    restaurantId: params.restaurantId ? +params.restaurantId : 0
+                    restaurantId: params.restaurantId ? +params.restaurantId : 0,
+                    options: optionObject
                 }
             }
-        })
+        });
 
-        navigage(-1);
+        navigate(-1);
+    };
+
+    const onOptionClick = () => {
+        setOptionIndex(prev => [Date.now(), ...prev]);
+    };
+
+    const onDeleteClick = (deleteIndex: number) => {
+        setOptionIndex(prev => prev.filter(index => index !== deleteIndex));
+        // @ts-ignore
+        setValue(`${deleteIndex}-optionName`, "");
+        // @ts-ignore
+        setValue(`${deleteIndex}-optionExtra`, "");
     };
 
     return (
@@ -83,6 +103,32 @@ export const AddDish = () => {
                     type="text"
                     placeholder="Description"
                 />
+                <div className="my-10">
+                    <h4 className="font-medium mb-3 text-lg">Dish Options</h4>
+                    <span className="cursor-pointer text-white bg-gray-900 py-1 px-2 mt-5" onClick={onOptionClick}>
+                        Add Dish Option
+                    </span>
+                    {optionIndex.length !== 0 && optionIndex.map(index => (
+                        <div key={index} className="mt-5">
+                            <input 
+                                {...register(`${index}-optionName`)}
+                                className="py-2 px-4 focus:outline-none mr-3 focus:border-gray-600 border-2"
+                                type="text"
+                                placeholder="Option Name"
+                            />
+                            <input 
+                                {...register(`${index}-optionExtra`)}
+                                className="py-2 px-4 ocus:outline-none focus:border-gray-600 border-2"
+                                type="number"
+                                min={0}
+                                placeholder="Option Extra"
+                            />
+                            <span onClick={() => onDeleteClick(index)}>
+                                Delete Option
+                            </span>
+                        </div>
+                    ))}
+                </div>
                 <Button 
                     loading={loading}
                     canClick={formState.isValid}
