@@ -33,6 +33,12 @@ fragment DishParts on Dish {
     }
 }
 
+fragment OrderParts on Order {
+    id
+    createdAt
+    total
+}
+
 query FindMe {
     findMe {
         id
@@ -119,6 +125,9 @@ query MyRestaurant($myRestaurantInput: MyRestaurantInput!) {
             ...RestaurantParts
             menu {
                 ...DishParts
+            }
+            orders {
+                ...OrderParts
             }
         }
     }

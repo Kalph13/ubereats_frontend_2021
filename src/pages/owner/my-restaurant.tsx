@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { Link, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client";
 import { useFindMe } from "../../hooks/useFindMe";
+import { VictoryAxis, VictoryLine, VictoryChart, VictoryTheme, VictoryVoronoiContainer, VictoryTooltip, VictoryLabel } from "victory";
 import { Dish } from "../../components/dish";
 import { MyRestaurantDocument, MyRestaurantQuery, MyRestaurantQueryVariables } from "../../graphql/generated";
 import { CreatePaymentDocument, CreatePaymentMutation, CreatePaymentMutationVariables } from "../../graphql/generated";
@@ -82,6 +83,34 @@ export const MyRestaurant = () => {
                             {data?.myRestaurant.restaurant?.menu.map((dish, index) => <Dish key={index} name={dish.name} price={dish.price} description={dish.description} />)}
                         </div>
                     }
+                </div>
+                <div className="mt-20 mb-10">
+                    <h4 className="text-center text-2xl font-medium">Sales</h4>
+                    <div className="mt-10">
+                        <VictoryChart
+                            height={500}
+                            theme={VictoryTheme.material}
+                            width={window.innerWidth}
+                            domainPadding={50}
+                            containerComponent={<VictoryVoronoiContainer />}
+                        >
+                            <VictoryLine
+                                labels={({ datum }) => `$${datum.y}`}
+                                labelComponent={<VictoryTooltip style={{ fontSize: 18 } as any} renderInPortal dy={-20} />}
+                                data={data?.myRestaurant.restaurant?.orders.map(order => ({
+                                    x: order.createdAt,
+                                    y: order.total
+                                }))}
+                                interpolation="natural"
+                                style={{ data: { strokeWidth: 5 } }}
+                            />
+                            <VictoryAxis
+                                tickLabelComponent={<VictoryLabel renderInPortal />}
+                                tickFormat={(tick: any) => new Date(tick).toLocaleDateString("ko")}
+                                style={{ tickLabels: { fontSize: 20 } as any }}
+                            />
+                        </VictoryChart>
+                    </div>
                 </div>
             </div>
         </div>
