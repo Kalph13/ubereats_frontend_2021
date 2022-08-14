@@ -76,6 +76,9 @@ query Restaurant ($restaurantInput: RestaurantInput!) {
         GraphQLError
         restaurant { 
             ...RestaurantParts
+            menu {
+                ...DishParts
+            }
         }
     }
 }
@@ -179,6 +182,13 @@ mutation CreateDish($createDishInput: CreateDishInput!) {
 
 mutation CreatePayment($createPaymentInput: CreatePaymentInput!) {
     createPayment (input: $createPaymentInput) {
+        GraphQLSucceed
+        GraphQLError
+    }
+}
+
+mutation CreateOrder($createOrderInput: CreateOrderInput!) {
+    createOrder (input: $createOrderInput) {
         GraphQLSucceed
         GraphQLError
     }

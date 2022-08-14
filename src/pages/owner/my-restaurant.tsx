@@ -80,7 +80,7 @@ export const MyRestaurant = () => {
                     {data?.myRestaurant.restaurant?.menu.length === 0 ? 
                         <h4 className="text-xl mb-5">Please upload a dish!</h4> : 
                         <div>
-                            {data?.myRestaurant.restaurant?.menu.map((dish, index) => <Dish key={index} name={dish.name} price={dish.price} description={dish.description} />)}
+                            {data?.myRestaurant.restaurant?.menu.map((dish, index) => <Dish key={index} name={dish.name} price={dish.price} description={dish.description} addItemToOrder={() => null} />)}
                         </div>
                     }
                 </div>
