@@ -7,28 +7,60 @@ interface IDishProps {
     price: number;
     description: string;
     isCustomer?: boolean;
+    isSelected?: boolean;
     orderStarted?: boolean;
     options?: DishOption[] | null;
-    addItemToOrder: (dishId: number) => void;
+    children?: React.ReactNode,
+    addItem: (dishId: number) => void;
+    removeItem: (dishId: number) => void;
 }
 
-export const Dish: React.FC<IDishProps> = ({ id = 0, name, price, description, isCustomer = false, orderStarted = false, options, addItemToOrder }) => {
+export const Dish: React.FC<IDishProps> = ({
+    id = 0,
+    name,
+    price,
+    description,
+    isCustomer = false,
+    isSelected,
+    orderStarted = false,
+    options,
+    children: dishOptions,
+    addItem,
+    removeItem,
+}) => {
+    const onClick = () => {
+        if (orderStarted) {
+            if (!isSelected && addItem) {
+                return addItem(id);
+            }
+
+            if (isSelected && removeItem) {
+                return removeItem(id);
+            }
+        }
+    };
+    
     return (
-        <div className="px-8 py-4 border cursor-pointer hover:border-gray-800 transition-all" onClick={() => orderStarted ? addItemToOrder(id) : null}>
+        <div className={`px-8 py-4 border cursor-pointer transition-all ${isSelected ? "border-gray-800" : "hover:border-gray-800"}`}>
             <div className="mb-5">
-                <h3 className="text-lg font-medium">{name}</h3>
+                <h3 className="text-lg font-medium flex items-center">
+                    {name}
+                    {orderStarted &&
+                        <button 
+                            className={`ml-3 py-1 focus:outline-none text-sm text-white ${isSelected ? "bg-red-500" : "bg-lime-600"}`} 
+                            onClick={onClick}
+                        >
+                            {isSelected ? "Remove" : "Add"}
+                        </button>
+                    }
+                </h3>
                 <h4 className="font-medium">{description}</h4>
             </div>
             <span>${price}</span>
             {isCustomer && options && options?.length !== 0 && 
                 <div>
                     <h5 className="mt-8 mb-3 font-medium">Dish Options</h5>
-                    {options?.map((option, index) => 
-                        <span className="flex items-center" key={index}>
-                            <h6 className="mr-2">{option.name}</h6>
-                            <h6 className="text-sm opacity-75">(${option.extra})</h6>
-                        </span>
-                    )}
+                    <div className="grid gap-2 justify-start">{dishOptions}</div>
                 </div>
             }
         </div>

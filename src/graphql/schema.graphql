@@ -191,5 +191,6 @@ mutation CreateOrder($createOrderInput: CreateOrderInput!) {
     createOrder (input: $createOrderInput) {
         GraphQLSucceed
         GraphQLError
+        orderId
     }
 }
