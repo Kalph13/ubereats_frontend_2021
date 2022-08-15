@@ -52,6 +52,10 @@ export const Restaurant = () => {
     };
 
     const confirmOrder = () => {
+        if (loadingOrder) {
+            return;
+        }
+
         if (orderItems.length === 0) {
             alert("Can't place an empty order");
             return;
@@ -129,7 +133,7 @@ export const Restaurant = () => {
         } = data;
 
         if (GraphQLSucceed) {
-            navigate(`/orders/${orderId}`);
+            navigate(`/order/${orderId}`);
         }
     };
 
