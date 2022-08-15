@@ -39,6 +39,21 @@ fragment OrderParts on Order {
     total
 }
 
+fragment FullOrderParts on Order {
+    id
+    status
+    total
+    driver {
+        email
+    }
+    customer {
+        email
+    }
+    restaurant {
+        name
+    }
+}
+
 query FindMe {
     findMe {
         id
@@ -141,18 +156,7 @@ query GetOrder($getOrderInput: GetOrderInput!) {
         GraphQLSucceed
         GraphQLError
         order {
-            id
-            status
-            total
-            driver {
-                email
-            }
-            customer {
-                email
-            }
-            restaurant {
-                name
-            }
+            ...FullOrderParts
         }
     }
 }
@@ -213,5 +217,11 @@ mutation CreateOrder($createOrderInput: CreateOrderInput!) {
         GraphQLSucceed
         GraphQLError
         orderId
+    }
+}
+
+subscription OrderUpdate($orderUpdateInput: OrderUpdateInput!) {
+    orderUpdate (input: $orderUpdateInput) {
+        ...FullOrderParts
     }
 }

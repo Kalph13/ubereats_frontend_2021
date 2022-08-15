@@ -1,7 +1,9 @@
-import React from "react";
-import { useQuery } from "@apollo/client";
+import React, { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
+import { useQuery, useSubscription } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { GetOrderDocument, GetOrderQuery, GetOrderQueryVariables } from "../graphql/generated";
+import { OrderUpdateDocument, OrderUpdateSubscription, OrderUpdateSubscriptionVariables } from "../graphql/generated";
 
 /* interface IParams {
     id: string;
@@ -9,7 +11,8 @@ import { GetOrderDocument, GetOrderQuery, GetOrderQueryVariables } from "../grap
 
 export const Order = () => {
     const params = useParams();
-    const { data } = useQuery<GetOrderQuery, GetOrderQueryVariables>(GetOrderDocument, {
+    
+    const { data, subscribeToMore } = useQuery<GetOrderQuery, GetOrderQueryVariables>(GetOrderDocument, {
         variables: {
             getOrderInput: {
                 id: params.id ? +params.id : 0
@@ -17,10 +20,35 @@ export const Order = () => {
         }
     });
 
-    console.log("------ Get Order ------ data:", data);
+    useEffect(() => {
+        if (data?.getOrder.GraphQLSucceed) {
+            subscribeToMore({
+                document: OrderUpdateDocument,
+                variables: {
+                    orderUpdateInput: {
+                        id: params.id ? +params.id : 0
+                    }
+                },
+                updateQuery: (prev, { subscriptionData: { data } }: { subscriptionData: { data: OrderUpdateSubscription } }) => {
+                    if (!data) return prev;
+                    return {
+                        getOrder: {
+                            ...prev.getOrder,
+                            order: {
+                                ...data.orderUpdate
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }, [data]);
 
     return (
         <div className="container mt-32 flex justify-content">
+            <Helmet>
+                <title>Order #{params.id} | Uber Eats</title>
+            </Helmet>
             <div className="border border-gray-800 w-full max-w-screen-sm flex flex-col justify-content">
                 <h4 className="bg-gray-800 w-full py-5 text-white text-center text-xl">Order #{params.id}</h4>
                 <h5 className="p-5 pt-10 text-3xl text-center">${data?.getOrder.order?.total}</h5>
