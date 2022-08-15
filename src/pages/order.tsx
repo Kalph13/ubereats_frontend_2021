@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useQuery, useSubscription } from "@apollo/client";
 import { useParams } from "react-router-dom";
+import { useFindMe } from "../hooks/useFindMe";
 import { GetOrderDocument, GetOrderQuery, GetOrderQueryVariables } from "../graphql/generated";
 import { OrderUpdateDocument, OrderUpdateSubscription, OrderUpdateSubscriptionVariables } from "../graphql/generated";
 
@@ -11,6 +12,7 @@ import { OrderUpdateDocument, OrderUpdateSubscription, OrderUpdateSubscriptionVa
 
 export const Order = () => {
     const params = useParams();
+    const { data: userData } = useFindMe();
     
     const { data, subscribeToMore } = useQuery<GetOrderQuery, GetOrderQueryVariables>(GetOrderDocument, {
         variables: {
@@ -65,9 +67,17 @@ export const Order = () => {
                         Driver:{" "}
                         <span className="font-medium">{data?.getOrder.order?.driver?.email || "Not Yet"}</span>
                     </div>
-                    <span className="text-center mt-5 mb-3 text-2xl text-lime-600">
-                        Status: {data?.getOrder.order?.status}
-                    </span>
+                    {userData?.findMe.role === "Client" &&
+                        <span className="text-center mt-5 mb-3 text-2xl text-lime-600">
+                            Status: {data?.getOrder.order?.status}
+                        </span>
+                    }
+                    {userData?.findMe.role === "Owner" &&
+                        <>
+                            {data?.getOrder.order?.status === "Pending" && <button className="btn">Accept Order</button>}
+                            {data?.getOrder.order?.status === "Cooking" && <button className="btn">Order Cooked</button>}                        
+                        </>
+                    }
                 </div>
             </div>
         </div>

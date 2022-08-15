@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useSubscription } from "@apollo/client";
 import { useFindMe } from "../../hooks/useFindMe";
 import { VictoryAxis, VictoryLine, VictoryChart, VictoryTheme, VictoryVoronoiContainer, VictoryTooltip, VictoryLabel } from "victory";
 import { Dish } from "../../components/dish";
 import { MyRestaurantDocument, MyRestaurantQuery, MyRestaurantQueryVariables } from "../../graphql/generated";
 import { CreatePaymentDocument, CreatePaymentMutation, CreatePaymentMutationVariables } from "../../graphql/generated";
+import { PendingOrdersDocument, PendingOrdersSubscription } from "../../graphql/generated";
 
 /* interface IParams {
     id: string;
@@ -14,6 +15,7 @@ import { CreatePaymentDocument, CreatePaymentMutation, CreatePaymentMutationVari
 
 export const MyRestaurant = () => {
     const params = useParams();
+    const navigate = useNavigate();
     const { data: userData } = useFindMe();
     
     const { data } = useQuery<MyRestaurantQuery, MyRestaurantQueryVariables>(MyRestaurantDocument, {
@@ -23,6 +25,14 @@ export const MyRestaurant = () => {
             }
         }
     });
+
+    const { data: subscriptionData } = useSubscription<PendingOrdersSubscription>(PendingOrdersDocument);
+
+    useEffect(() => {
+        if (subscriptionData?.pendingOrders.id) {
+            navigate(`/orders/${subscriptionData.pendingOrders.id}`);
+        }
+    }, [subscriptionData])
 
     const paddleTrigger = () => {
         if (userData?.findMe.email) {

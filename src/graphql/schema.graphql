@@ -225,3 +225,9 @@ subscription OrderUpdate($orderUpdateInput: OrderUpdateInput!) {
         ...FullOrderParts
     }
 }
+
+subscription PendingOrders {
+    pendingOrders {
+        ...FullOrderParts
+    }
+}
