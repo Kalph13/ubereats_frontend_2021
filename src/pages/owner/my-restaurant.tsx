@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useSubscription } from "@apollo/client";
+import { useQuery, useMutation, useSubscription } from "@apollo/client";
 import { useFindMe } from "../../hooks/useFindMe";
 import { VictoryAxis, VictoryLine, VictoryChart, VictoryTheme, VictoryVoronoiContainer, VictoryTooltip, VictoryLabel } from "victory";
 import { Dish } from "../../components/dish";

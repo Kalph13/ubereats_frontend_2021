@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { useQuery, useSubscription } from "@apollo/client";
+import { useQuery, useMutation, useSubscription } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { useFindMe } from "../hooks/useFindMe";
+import { UserRole, OrderStatus } from "../graphql/generated";
 import { GetOrderDocument, GetOrderQuery, GetOrderQueryVariables } from "../graphql/generated";
-import { OrderUpdateDocument, OrderUpdateSubscription, OrderUpdateSubscriptionVariables } from "../graphql/generated";
+import { EditOrderDocument, EditOrderMutation, EditOrderMutationVariables } from "../graphql/generated";
+import { OrderUpdateDocument, OrderUpdateSubscription } from "../graphql/generated";
 
 /* interface IParams {
     id: string;
@@ -14,6 +16,8 @@ export const Order = () => {
     const params = useParams();
     const { data: userData } = useFindMe();
     
+    const [ editOrder ] = useMutation<EditOrderMutation, EditOrderMutationVariables>(EditOrderDocument);
+
     const { data, subscribeToMore } = useQuery<GetOrderQuery, GetOrderQueryVariables>(GetOrderDocument, {
         variables: {
             getOrderInput: {
@@ -21,6 +25,8 @@ export const Order = () => {
             }
         }
     });
+
+    console.log("------ Get Order ------ data:", data);
 
     useEffect(() => {
         if (data?.getOrder.GraphQLSucceed) {
@@ -32,7 +38,13 @@ export const Order = () => {
                     }
                 },
                 updateQuery: (prev, { subscriptionData: { data } }: { subscriptionData: { data: OrderUpdateSubscription } }) => {
-                    if (!data) return prev;
+                    console.log("------ subscribeToMore ------ prev:", prev);
+                    console.log("------ subscribeToMore ------ data:", data);
+                    
+                    if (!data) {
+                        return prev;
+                    }
+                    
                     return {
                         getOrder: {
                             ...prev.getOrder,
@@ -45,6 +57,17 @@ export const Order = () => {
             });
         }
     }, [data]);
+
+    const onClick = (newStatus: OrderStatus) => {
+        editOrder({
+            variables: {
+                editOrderInput: {
+                    id: params.id ? +params.id : 0,
+                    status: newStatus
+                }
+            }
+        });
+    };
 
     return (
         <div className="container mt-32 flex justify-content">
@@ -67,15 +90,28 @@ export const Order = () => {
                         Driver:{" "}
                         <span className="font-medium">{data?.getOrder.order?.driver?.email || "Not Yet"}</span>
                     </div>
-                    {userData?.findMe.role === "Client" &&
+                    {userData?.findMe.role === UserRole.Client &&
                         <span className="text-center mt-5 mb-3 text-2xl text-lime-600">
                             Status: {data?.getOrder.order?.status}
                         </span>
                     }
-                    {userData?.findMe.role === "Owner" &&
+                    {userData?.findMe.role === UserRole.Owner &&
                         <>
-                            {data?.getOrder.order?.status === "Pending" && <button className="btn">Accept Order</button>}
-                            {data?.getOrder.order?.status === "Cooking" && <button className="btn">Order Cooked</button>}                        
+                            {data?.getOrder.order?.status === OrderStatus.Pending &&
+                                <button className="btn" onClick={() => onClick(OrderStatus.Cooking)}>
+                                    Accept Order
+                                </button>
+                            }
+                            {data?.getOrder.order?.status === OrderStatus.Cooking &&
+                                <button className="btn" onClick={() => onClick(OrderStatus.Cooked)}>
+                                    Order Cooked
+                                </button>
+                            }
+                            {data?.getOrder.order?.status !== OrderStatus.Cooking && data?.getOrder.order?.status !== OrderStatus.Pending &&
+                                <span className="text-center mt-5 mb-3 text-2xl text-lime-600">
+                                    Status: {data?.getOrder.order?.status}
+                                </span>
+                            }
                         </>
                     }
                 </div>
