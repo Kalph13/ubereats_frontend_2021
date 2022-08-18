@@ -238,3 +238,9 @@ subscription PendingOrders {
         ...FullOrderParts
     }
 }
+
+subscription CookedOrders {
+    cookedOrders {
+        ...FullOrderParts
+    }
+}
