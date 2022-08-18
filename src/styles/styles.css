@@ -846,6 +846,10 @@ video {
   row-gap: 2.5rem;
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .rounded-md {
   border-radius: 0.375rem;
 }

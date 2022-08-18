@@ -26,8 +26,6 @@ export const Order = () => {
         }
     });
 
-    console.log("------ Get Order ------ data:", data);
-
     useEffect(() => {
         if (data?.getOrder.GraphQLSucceed) {
             subscribeToMore({
@@ -37,10 +35,7 @@ export const Order = () => {
                         id: params.id ? +params.id : 0
                     }
                 },
-                updateQuery: (prev, { subscriptionData: { data } }: { subscriptionData: { data: OrderUpdateSubscription } }) => {
-                    console.log("------ subscribeToMore ------ prev:", prev);
-                    console.log("------ subscribeToMore ------ data:", data);
-                    
+                updateQuery: (prev, { subscriptionData: { data } }: { subscriptionData: { data: OrderUpdateSubscription } }) => {                    
                     if (!data) {
                         return prev;
                     }
