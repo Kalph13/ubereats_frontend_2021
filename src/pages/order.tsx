@@ -65,11 +65,11 @@ export const Order = () => {
     };
 
     return (
-        <div className="container mt-32 flex justify-content">
+        <div className="container mt-32 flex justify-center">
             <Helmet>
                 <title>Order #{params.id} | Uber Eats</title>
             </Helmet>
-            <div className="border border-gray-800 w-full max-w-screen-sm flex flex-col justify-content">
+            <div className="border border-gray-800 w-full max-w-screen-sm flex flex-col justify-center">
                 <h4 className="bg-gray-800 w-full py-5 text-white text-center text-xl">Order #{params.id}</h4>
                 <h5 className="p-5 pt-10 text-3xl text-center">${data?.getOrder.order?.total}</h5>
                 <div className="p-5 text-xl grid gap-6">
@@ -81,7 +81,7 @@ export const Order = () => {
                         Deliver To:{" "}
                         <span className="font-medium">{data?.getOrder.order?.customer?.email}</span>
                     </div>
-                    <div className="border-t border-b by-5 border-gray-700">
+                    <div className="border-t border-b py-5 border-gray-700">
                         Driver:{" "}
                         <span className="font-medium">{data?.getOrder.order?.driver?.email || "Not Yet"}</span>
                     </div>
@@ -108,6 +108,25 @@ export const Order = () => {
                                 </span>
                             }
                         </>
+                    }
+                    {userData?.findMe.role === UserRole.Delivery &&
+                        <>
+                            {data?.getOrder.order?.status === OrderStatus.Cooked &&
+                                <button className="btn" onClick={() => onClick(OrderStatus.PickedUp)}>
+                                    Picked Up
+                                </button>
+                            }
+                            {data?.getOrder.order?.status === OrderStatus.PickedUp &&
+                                <button className="btn" onClick={() => onClick(OrderStatus.Delivered)}>
+                                    Order Delivered
+                                </button>
+                            }
+                        </>
+                    }
+                    {data?.getOrder.order?.status === OrderStatus.Delivered &&
+                        <span className="text-center mt-5 mb-3 text-2xl text-lime-600">
+                            Thank you for using Uber Eats!
+                        </span>
                     }
                 </div>
             </div>

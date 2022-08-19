@@ -227,6 +227,13 @@ mutation EditOrder($editOrderInput: EditOrderInput!) {
     }
 }
 
+mutation TakeOrder($takeOrderInput: TakeOrderInput!) {
+    takeOrder (input: $takeOrderInput) {
+        GraphQLSucceed
+        GraphQLError
+    }
+}
+
 subscription OrderUpdate($orderUpdateInput: OrderUpdateInput!) {
     orderUpdate (input: $orderUpdateInput) {
         ...FullOrderParts

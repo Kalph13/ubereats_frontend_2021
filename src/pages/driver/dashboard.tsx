@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import GoogleMapReact from "google-map-react";
-import { Link } from "react-router-dom";
-import { useSubscription } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useSubscription } from "@apollo/client";
 import { CookedOrdersDocument, CookedOrdersSubscription } from "../../graphql/generated"
+import { TakeOrderDocument, TakeOrderMutation, TakeOrderMutationVariables } from "../../graphql/generated"
 
 interface ICoords { 
     lat: number;
@@ -21,7 +22,7 @@ export const Dashboard = () => {
     const [ driverCoords, setDriverCoords ] = useState<ICoords>({ lat: 0, lng: 0 });
     const [ map, setMap ] = useState<google.maps.Map>();
     const [ maps, setMaps ] = useState<any>();
-    const { data: cookedOrdersData } = useSubscription<CookedOrdersSubscription>(CookedOrdersDocument);
+    const navigate = useNavigate();
 
     // @ts-ignore
     const onSuccess = ({ coords: { latitude, longitude } }) => {
@@ -30,36 +31,60 @@ export const Dashboard = () => {
 
     // @ts-ignore
     const onError = (error) => {
-        console.log(error);
+        console.log("------ onError ------", error);
     }
 
     const onApiLoaded = ({ map, maps }: { map: any; maps: any }) => {
         map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng));
+        setMap(map);
+        setMaps(maps);
+    };
+
+    const onCompleted = (data: TakeOrderMutation) => {
+        if (data.takeOrder.GraphQLSucceed) {
+            navigate(`/order/${cookedOrdersData?.cookedOrders.id}`);
+        }
+    };
+
+    const onClick = (orderId: number) => {
+        takeOrder({
+            variables: {
+                takeOrderInput: {
+                    id: orderId
+                }
+            }
+        });
     };
 
     const makeRoute = () => {
         if (map) {
-            const directionService = new google.maps.DirectionsService();
-            const directionRenderer = new google.maps.DirectionsRenderer({
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer({
                 polylineOptions: {
                     strokeColor: "#000",
                     strokeOpacity: 1,
                     strokeWeight: 5
                 }
             });
-            directionRenderer.setMap(map);
-            directionService.route(
+            directionsRenderer.setMap(map);
+            directionsService.route(
                 {
                     origin: { location: new google.maps.LatLng(driverCoords.lat, driverCoords.lng) },
-                    destination: { location: new google.maps.LatLng(driverCoords.lat + 0.05, driverCoords.lng + 0.05) },
-                    travelMode: google.maps.TravelMode.DRIVING
+                    destination: { location: new google.maps.LatLng(driverCoords.lat - 0.05, driverCoords.lng + 0.05) },
+                    travelMode: google.maps.TravelMode.TRANSIT
                 },
-                result => {
-                    directionRenderer.setDirections(result);
+                (result) => {
+                    directionsRenderer.setDirections(result);
                 }
             );
         }
     };
+
+    const { data: cookedOrdersData } = useSubscription<CookedOrdersSubscription>(CookedOrdersDocument);
+
+    const [ takeOrder ] = useMutation<TakeOrderMutation, TakeOrderMutationVariables>(TakeOrderDocument, {
+        onCompleted
+    })
 
     useEffect(() => {
         navigator.geolocation.watchPosition(onSuccess, onError, {
@@ -70,6 +95,15 @@ export const Dashboard = () => {
     useEffect(() => {
         if (map && maps) {
             map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng));
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode(
+                {
+                    location: new google.maps.LatLng(driverCoords.lat, driverCoords.lng),
+                },
+                (results, status) => {
+                    console.log("------ Geocode ------- status, results:", status, results);
+                }
+            );
         }
     }, [driverCoords.lat, driverCoords.lng])
 
@@ -85,8 +119,8 @@ export const Dashboard = () => {
             <div className="overflow-hidden" style={{ width: window.innerWidth, height: "50vh" }}>
                 <GoogleMapReact
                     defaultCenter={{
-                        lat: 36.58,
-                        lng: 125.95
+                        lat: 0,
+                        lng: 0
                     }}
                     defaultZoom={16}
                     draggable={true}
@@ -107,9 +141,9 @@ export const Dashboard = () => {
                                 Pick it up soon @{" "}
                                 {cookedOrdersData.cookedOrders.restaurant.name}
                             </h1>
-                            <Link className="btn w-full block text-center mt-5" to={`/order/${cookedOrdersData.cookedOrders.id}`}>
+                            <button className="btn w-full block text-center mt-5" onClick={() => onClick(cookedOrdersData.cookedOrders.id)}>
                                 Accept Challenge &rarr;
-                            </Link>
+                            </button>
                         </> 
                     ) : (
                         <h1 className="text-center text-3xl font-medium">
