@@ -30,7 +30,7 @@ export const MyRestaurant = () => {
 
     useEffect(() => {
         if (subscriptionData?.pendingOrders.id) {
-            navigate(`/orders/${subscriptionData.pendingOrders.id}`);
+            navigate(`/order/${subscriptionData.pendingOrders.id}`);
         }
     }, [subscriptionData])
 
